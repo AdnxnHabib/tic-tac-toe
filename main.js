@@ -31,7 +31,11 @@ function TicTacToeGame()
 
     function takeTurn()
     {  
-        if(turn % 2 == 0)
+        if(board.checkForWinner())
+        {
+            return;
+        }
+        if(turn % 2 === 0)
         {
             humanPlayer.takeTurn();
         }
@@ -46,7 +50,56 @@ function TicTacToeGame()
 function Board()
 {
     this.positions = Array.from(document.querySelectorAll('.col'))
-    console.log(this.positions)
+            
+
+    this.checkForWinner = function(){
+        let winner = false;     
+        const winningConditions = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,4,8],
+            [2,4,6],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8]
+            
+        ];
+
+        const positions = this.positions;
+
+         winningConditions.forEach((winningCombo) =>{
+            const pos0InnerText = positions[winningCombo[0]].innerText;
+            const pos1InnerText = positions[winningCombo[1]].innerText;
+            const pos2InnerText = positions[winningCombo[2]].innerText;
+            const isWinningCombo = pos0InnerText !== "" && 
+            pos0InnerText === pos1InnerText &&
+            pos1InnerText === pos2InnerText;    
+
+            if(isWinningCombo)
+            {
+                winner = true;
+                winningCombo.forEach((index) =>{
+
+                    positions[index].classname += 'winner';
+                })
+            }
+        
+
+         } );    
+        
+         return winner; 
+            
+               
+
+
+    }
+
+
+
+
+
+
 };
 
 
@@ -76,6 +129,9 @@ function ComputerPlayer(board)
 {
     this.takeTurn = function()
     {
-       const availablePositions = board.positions.filter(())
+       const availablePositions = board.positions.filter((p) => p.innerText === "");
+       const move = Math.floor(Math.random() * availablePositions.length)
+       availablePositions[move].innerText = "O"
     }
+
 };
